@@ -1,11 +1,12 @@
 <template>
-  <el-aside width="200px">
+  <el-aside :width="$store.state.isCollapse? '180px':'64px'">
     <el-menu
         default-active="2"
         class="el-menu-vertical-demo"
         background-color="#545c64"
         text-color="#fff"
-        :collapse="false"
+        :collapse="!$store.state.isCollapse"
+        :collapse-transition="false"
     >
       <el-menu-item :index="item.path"
                     v-for="item in noChildren()"
@@ -91,5 +92,9 @@ const hasChildren = () => {
 .icons {
   width: 18px;
   height: 18px;
+}
+
+.el-menu {
+  border-right: none;
 }
 </style>

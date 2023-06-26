@@ -18,6 +18,7 @@ import CommonAside from "../components/CommonAside.vue"
 <style lang="less" scoped>
 .el-container{
   flex-wrap: wrap;
+  align-items: flex-start;
 }
 .common-layout{
   height: 100%;
