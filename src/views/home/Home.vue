@@ -27,45 +27,31 @@
   </el-row>
 </template>
 <script setup>
-const tableData = [
-  {
-    name: 'oppo',
-    todayBuy: 500,
-    monthBuy: 3500,
-    totalBuy: 22000,
-  },
-  {
-    name: 'vivo',
-    todayBuy: 300,
-    monthBuy: 2200,
-    totalBuy: 24000,
-  }, {
-    name: '苹果',
-    todayBuy: 800,
-    monthBuy: 4500,
-    totalBuy: 65000,
-  }, {
-    name: '小米',
-    todayBuy: 1200,
-    monthBuy: 6500,
-    totalBuy: 45000,
-  }, {
-    name: '三星',
-    todayBuy: 300,
-    monthBuy: 2000,
-    totalBuy: 34000,
-  }, {
-    name: '魅族',
-    todayBuy: 350,
-    monthBuy: 3000,
-    totalBuy: 22000,
-  }]
+import {getCurrentInstance, onMounted, ref} from "vue";
+import axios from "axios";
+
+let tableData = ref([])
 const tableLabel = {
   name: '课程',
   todayBuy: '今日购买',
   monthBuy: '本月购买',
   totalBuy: '总购买',
 }
+const {proxy} = getCurrentInstance()
+const getTableList = async () => {
+  // await axios.get("https://www.fastmock.site/mock/117b47ba7ae2fa083c26c490ff39eae5/api/home/getTableData").then((res) => {
+  //   // console.log(res)
+  //   if(res.data.code == 200){
+  //     tableData.value = res.data.data;
+  //   }
+  // });
+  let res = await proxy.$api.getTableData();
+  console.log(res)
+
+}
+onMounted(() => {
+  getTableList();
+})
 </script>
 
 <style lang="less" scoped>
