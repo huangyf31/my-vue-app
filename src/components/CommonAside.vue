@@ -8,8 +8,11 @@
         :collapse="!$store.state.isCollapse"
         :collapse-transition="false"
     >
+      <h3 v-show="$store.state.isCollapse">后台管理</h3>
+      <h3 v-show="!$store.state.isCollapse">后台</h3>
       <el-menu-item :index="item.path"
                     v-for="item in noChildren()"
+                    @click="clickMenu(item)"
                     :key="item.path">
         <component class="icons" :is="item.icon"></component>
         <span>{{ item.label }}</span>
@@ -24,7 +27,8 @@
         <el-menu-item-group>
           <el-menu-item :index="subItem.path"
                         v-for="(subItem,subIndex) in item.children"
-                        :key="subIndex">
+                        :key="subIndex"
+                        @click="clickMenu(subItem)">
             <component class="icons" :is="subItem.icon"></component>
             <span>{{ subItem.label }}</span>
           </el-menu-item>
@@ -35,6 +39,9 @@
 </template>
 
 <script setup>
+import {useRouter} from 'vue-router';
+
+let router = useRouter();
 const list = [
   {
     path: "/",
@@ -86,6 +93,10 @@ const noChildren = () => {
 const hasChildren = () => {
   return list.filter((item) => item.children);
 }
+
+const clickMenu = (item) => {
+  router.push({name: item.name})
+}
 </script>
 
 <style lang="less" scoped>
@@ -96,5 +107,11 @@ const hasChildren = () => {
 
 .el-menu {
   border-right: none;
+
+  h3 {
+    line-height: 48px;
+    color: #fff;
+    text-align: center;
+  }
 }
 </style>
