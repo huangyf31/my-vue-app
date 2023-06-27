@@ -30,6 +30,10 @@ export default createStore({
                     state.tableList.push(val);
                 }
             }
+        },
+        closeTab: (state, val) => {
+            let res = state.tableList.findIndex((item)=>item.name === val.name);
+            state.tableList.splice(res,1);
         }
     }
 })
