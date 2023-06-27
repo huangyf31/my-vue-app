@@ -40,7 +40,8 @@
 
 <script setup>
 import {useRouter} from 'vue-router';
-
+import {useStore} from "vuex";
+const store = useStore();
 let router = useRouter();
 const list = [
   {
@@ -96,7 +97,10 @@ const hasChildren = () => {
 
 const clickMenu = (item) => {
   router.push({name: item.name})
+  //vuex传递变量
+  store.commit('selectMenu',item);
 }
+
 </script>
 
 <style lang="less" scoped>

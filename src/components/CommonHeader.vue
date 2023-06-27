@@ -6,7 +6,10 @@
           <Menu/>
         </el-icon>
       </el-button>
-      <h3>首页</h3>
+      <el-breadcrumb separator="/" class="bread">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="current.path" v-if="current">{{ current.label }}</el-breadcrumb-item>
+      </el-breadcrumb>
     </div>
     <div class="r-content">
       <el-dropdown>
@@ -26,14 +29,21 @@
 
 <script setup>
 import {useStore} from 'vuex'
+import {computed} from "vue";
 
-let store = useStore();
+const store = useStore();
 const getImgSrc = (user) => {
   return new URL(`../assets/image/${user}.jpg`, import.meta.url).href;
 };
-const handleCollapse = ()=>{
+const handleCollapse = () => {
   store.commit('updateIsCollapse');
 }
+//计算属性
+const current = computed(() => {
+  return store.state.currentMenu;
+})
+
+
 </script>
 
 <style lang="less" scoped>
@@ -62,5 +72,10 @@ header {
   h3 {
     color: #fff;
   }
+}
+
+.bread /deep/ span {
+  color: #fff !important;
+  cursor: pointer !important;
 }
 </style>
