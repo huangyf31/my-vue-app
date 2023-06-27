@@ -19,6 +19,12 @@ export default {
             method: 'get',
             mock: true,
         })
-
+    },
+    getChartData() {
+        return request({
+            url: "/home/getChartData",
+            method: "get",
+            mock: true,
+        })
     }
 }
