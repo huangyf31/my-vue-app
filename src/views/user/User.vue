@@ -23,7 +23,7 @@
         background
         layout="prev, pager, next"
         :total="config.total"
-        class="mt-4"
+        class="pager"
         @current-change="clickPage"
     />
   </div>
@@ -81,6 +81,14 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.table{
+  position: relative;
+  height: 520px;
+  .pager{
+    position: absolute;
+    right: 0;
+    bottom: -20px;
+  }
+}
 </style>
