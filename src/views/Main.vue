@@ -4,6 +4,7 @@
       <common-aside></common-aside>
       <el-container class="el-container">
         <common-header></common-header>
+        <common-tab></common-tab>
         <el-main>
           <router-view></router-view>
         </el-main>
@@ -14,6 +15,7 @@
 <script setup>
 import CommonHeader from "../components/CommonHeader.vue"
 import CommonAside from "../components/CommonAside.vue"
+import CommonTab from "../components/CommonTab.vue"
 </script >
 <style lang="less" scoped>
 .el-container{
