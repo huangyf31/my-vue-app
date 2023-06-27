@@ -24,6 +24,20 @@
         </el-table>
       </el-card>
     </el-col>
+    <el-col :span="16" style="margin-top: 20px">
+      <div class="num">
+        <el-card shadow="hover" :body-style="{display:'flex',padding:0}" v-for="item in countData" :key="item.name">
+          <component
+              class="icons"
+              :is="item.icon"
+              :style="{background:item.color}"></component>
+          <div class="details">
+            <p class="num">¥{{ item.value }}</p>
+            <p class="txt">{{ item.name }}</p>
+          </div>
+        </el-card>
+      </div>
+    </el-col>
   </el-row>
 </template>
 <script setup>
@@ -31,6 +45,7 @@ import {getCurrentInstance, onMounted, ref} from "vue";
 import axios from "axios";
 
 let tableData = ref([])
+let countData = ref([])
 const tableLabel = {
   name: '课程',
   todayBuy: '今日购买',
@@ -45,12 +60,16 @@ const getTableList = async () => {
   //     tableData.value = res.data.data;
   //   }
   // });
-  let res = await proxy.$api.getTableData();
-  console.log(res)
+  tableData.value = await proxy.$api.getTableData();
 
+}
+//获取首页count数据
+const getCountData = async () => {
+  countData.value = await proxy.$api.getCountData();
 }
 onMounted(() => {
   getTableList();
+  getCountData();
 })
 </script>
 
@@ -83,5 +102,39 @@ onMounted(() => {
       }
     }
   }
+
+  .num {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .el-card{
+      width: 32%;
+      margin-bottom: 20px;
+    }
+    .icons{
+      width: 80px;
+      height: 80px;
+      font-size: 30px;
+      text-align: center;
+      line-height: 80px;
+      background: #fff;
+    }
+    .details{
+      margin-left: 15px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .num{
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+      .txt{
+        font-size: 14px;
+        text-align: center;
+        color: #999;
+      }
+    }
+  }
 }
+
 </style>

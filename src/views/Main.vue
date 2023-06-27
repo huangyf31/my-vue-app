@@ -23,6 +23,7 @@ import CommonAside from "../components/CommonAside.vue"
 .common-layout{
   height: 100%;
   & > .el-container{
+    flex-wrap: nowrap;
     height: 100%;
     & > .el-aside{
       height: 100%;
