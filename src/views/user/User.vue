@@ -1,5 +1,5 @@
 <template>
-  <div class="user-header">
+  <div class="user-header" @click="dialogVisible=true">
     <el-button type="primary">+新增</el-button>
     <el-form :inline="true" :model="formInline">
       <el-form-item label="请输入">
@@ -38,11 +38,67 @@
         @current-change="clickPage"
     />
   </div>
+  <el-dialog
+      v-model="dialogVisible"
+      title="新增用户"
+      width="35%"
+      :before-close="handleClose"
+  >
+    <el-form :inline="true" :model="formUser">
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="姓名">
+            <el-input v-model="formUser.name" placeholder="请输入姓名"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="年龄">
+            <el-input v-model="formUser.age" placeholder="请输入年龄"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="性别">
+            <el-select
+                v-model="formUser.sex"
+                placeholder="请选择"
+                clearable
+            >
+              <el-option label="男" value="0"/>
+              <el-option label="女" value="1"/>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="出生日期">
+            <el-date-picker
+                v-model="formUser.birth"
+                type="date"
+                placeholder="请输入出生日期"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-form-item label="地址">
+          <el-input v-model="formUser.addr" placeholder="请输入地址"/>
+        </el-form-item>
+      </el-row>
+      <el-row style="justify-content: flex-end">
+        <el-form-item>
+          <el-button type="primary" @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="onSubmit">确定</el-button>
+        </el-form-item>
+      </el-row>
+    </el-form>
+  </el-dialog>
 </template>
 
 <script setup>
 
 import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import {ElMessageBox} from "element-plus";
 
 const {proxy} = getCurrentInstance();
 const list = ref([]);
@@ -78,6 +134,7 @@ const config = reactive({
 const formInline = reactive({
   keyword: "",
 })
+const dialogVisible = ref(false);
 const getUserData = async (config) => {
   let res = await proxy.$api.getUserData(config);
   // console.log(res)
@@ -95,6 +152,21 @@ const handleSearch = () => {
   config.name = formInline.keyword;
   getUserData(config);
 }
+const handleClose = (done) => {
+  ElMessageBox.confirm("确定关闭吗？")
+      .then(() => {
+        done()
+      })
+      .catch(() => {
+        // catch error
+      })
+}
+//添加用户的form数据
+const formUser = reactive({
+  name: "",
+  age: "",
+
+})
 onMounted(() => {
   getUserData(config);
 })
@@ -111,7 +183,8 @@ onMounted(() => {
     bottom: -20px;
   }
 }
-.user-header{
+
+.user-header {
   display: flex;
   justify-content: space-between;
 }
