@@ -1,6 +1,6 @@
 <template>
   <div class="user-header">
-    <el-button type="primary"  @click="dialogVisible=true">+新增</el-button>
+    <el-button type="primary" @click="dialogVisible=true">+新增</el-button>
     <el-form :inline="true" :model="formInline">
       <el-form-item label="请输入">
         <el-input v-model="formInline.keyword" placeholder="请输入用户名"/>
@@ -47,19 +47,21 @@
     <el-form :inline="true" :model="formUser" ref="userForm">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="姓名" prop="name">
+          <el-form-item label="姓名" prop="name" :rules="[{required:true,message:'姓名是必填项'}]">
             <el-input v-model="formUser.name" placeholder="请输入姓名"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="年龄" prop="age">
-            <el-input v-model="formUser.age" placeholder="请输入年龄"/>
+          <el-form-item label="年龄" prop="age"
+                        :rules="[{required:true,message:'姓名是必填项'}
+                        ,{type:'number',message: '年龄必须是数字'}]">
+            <el-input v-model.number="formUser.age" placeholder="请输入年龄"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="性别" prop="sex">
+          <el-form-item label="性别" prop="sex" :rules="[{required:true,message:'性别是必填项'}]">
             <el-select
                 v-model="formUser.sex"
                 placeholder="请选择"
@@ -71,7 +73,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="出生日期" prop="birth">
+          <el-form-item label="出生日期" prop="birth" :rules="[{required:true,message:'出生日期是必填项'}]">
             <el-date-picker
                 v-model="formUser.birth"
                 type="date"
@@ -81,13 +83,13 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-form-item label="地址" prop="addr">
+        <el-form-item label="地址" prop="addr" :rules="[{required:true,message:'地址是必填项'}]">
           <el-input v-model="formUser.addr" placeholder="请输入地址"/>
         </el-form-item>
       </el-row>
       <el-row style="justify-content: flex-end">
         <el-form-item>
-          <el-button type="primary" @click="dialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="handleCancel">取消</el-button>
           <el-button type="primary" @click="onSubmit">确定</el-button>
         </el-form-item>
       </el-row>
@@ -155,6 +157,7 @@ const handleSearch = () => {
 const handleClose = (done) => {
   ElMessageBox.confirm("确定关闭吗？")
       .then(() => {
+        proxy.$refs.userForm.resetFields();
         done()
       })
       .catch(() => {
@@ -182,14 +185,23 @@ const timeFormat = (time) => {
   return year + "-" + add(month) + "-" + add(date);
 }
 //添加用户
-const onSubmit = async () => {
-  formUser.birth = timeFormat(formUser.birth);
-  let res = await proxy.$api.addUser(formUser);
-  console.log(res);
-  if (res) {
-    dialogVisible.value = false;
-    proxy.$refs.userForm.resetFields();
-  }
+const onSubmit = () => {
+  proxy.$refs.userForm.validate(async (valid) => {
+    if (valid) {
+      formUser.birth = timeFormat(formUser.birth);
+      let res = await proxy.$api.addUser(formUser);
+      console.log(res);
+      if (res) {
+        dialogVisible.value = false;
+        proxy.$refs.userForm.resetFields();
+      }
+    }
+  })
+}
+//取消
+const handleCancel = () => {
+  dialogVisible.value = false;
+  proxy.$refs.userForm.resetFields();
 }
 onMounted(() => {
   getUserData(config);
