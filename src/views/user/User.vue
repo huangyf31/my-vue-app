@@ -1,6 +1,6 @@
 <template>
   <div class="user-header">
-    <el-button type="primary" @click="dialogVisible=true">+新增</el-button>
+    <el-button type="primary" @click="handleAdd()">+新增</el-button>
     <el-form :inline="true" :model="formInline">
       <el-form-item label="请输入">
         <el-input v-model="formInline.keyword" placeholder="请输入用户名"/>
@@ -20,8 +20,9 @@
           :width="item.width?item.width:125"
       />
       <el-table-column fixed="right" label="操作" width="180">
-        <template #default>
+        <template #default="scope">
           <el-button size="small"
+                     @click="handleEdit(scope.row)"
           >编辑
           </el-button
           >
@@ -40,7 +41,7 @@
   </div>
   <el-dialog
       v-model="dialogVisible"
-      title="新增用户"
+      :title="action==='add'?'新增用户':'编辑用户'"
       width="35%"
       :before-close="handleClose"
   >
@@ -100,7 +101,7 @@
 <script setup>
 
 import {getCurrentInstance, onMounted, reactive, ref} from "vue";
-import {ElMessageBox} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const {proxy} = getCurrentInstance();
 const list = ref([]);
@@ -188,13 +189,32 @@ const timeFormat = (time) => {
 const onSubmit = () => {
   proxy.$refs.userForm.validate(async (valid) => {
     if (valid) {
-      formUser.birth = timeFormat(formUser.birth);
-      let res = await proxy.$api.addUser(formUser);
-      console.log(res);
-      if (res) {
-        dialogVisible.value = false;
-        proxy.$refs.userForm.resetFields();
+      if (action.value === "add") {
+        formUser.birth = timeFormat(formUser.birth);
+        let res = await proxy.$api.addUser(formUser);
+        console.log(res);
+        if (res) {
+          dialogVisible.value = false;
+          proxy.$refs.userForm.resetFields();
+          await getUserData(config);
+        }
+      } else {
+        //编辑的接口
+        formUser.sex === '男' ? (formUser.sex = 1) : (formUser.sex = 0);
+        let res = await proxy.$api.editUser(formUser);
+        console.log(res);
+        if (res) {
+          dialogVisible.value = false;
+          proxy.$refs.userForm.resetFields();
+          await getUserData(config);
+        }
       }
+    } else {
+      ElMessage({
+        showClose: true,
+        message: '请输入正确的内容',
+        type: "error"
+      })
     }
   })
 }
@@ -202,6 +222,23 @@ const onSubmit = () => {
 const handleCancel = () => {
   dialogVisible.value = false;
   proxy.$refs.userForm.resetFields();
+}
+//区分编辑和新增
+const action = ref('add')
+//新增用户
+const handleAdd = () => {
+  action.value = "add";
+  dialogVisible.value = true;
+}
+//编辑用户
+const handleEdit = (row) => {
+  //浅拷贝
+  action.value = "edit";
+  dialogVisible.value = true;
+  row.sex === 1 ? (row.sex = '男') : (row.sex = '女');
+  proxy.$nextTick(() => {
+    Object.assign(formUser, row);
+  })
 }
 onMounted(() => {
   getUserData(config);

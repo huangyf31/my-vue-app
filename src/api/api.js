@@ -42,5 +42,13 @@ export default {
             mock: false,
             data: params,
         })
+    },
+    editUser(params){
+        return request({
+            url: "/user/edit",
+            method: "post",
+            mock: false,
+            data: params,
+        })
     }
 }
