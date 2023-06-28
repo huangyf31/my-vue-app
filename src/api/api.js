@@ -43,10 +43,18 @@ export default {
             data: params,
         })
     },
-    editUser(params){
+    editUser(params) {
         return request({
             url: "/user/edit",
             method: "post",
+            mock: false,
+            data: params,
+        })
+    },
+    deleteUser(params) {
+        return request({
+            url: "/user/delete",
+            method: "get",
             mock: false,
             data: params,
         })

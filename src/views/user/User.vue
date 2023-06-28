@@ -26,7 +26,7 @@
           >编辑
           </el-button
           >
-          <el-button type="danger" size="small">删除</el-button>
+          <el-button type="danger" size="small" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -239,6 +239,24 @@ const handleEdit = (row) => {
   proxy.$nextTick(() => {
     Object.assign(formUser, row);
   })
+}
+//删除用户
+const handleDelete = (row) => {
+  ElMessageBox.confirm("确定删除吗？")
+      .then(async () => {
+        await proxy.$api.deleteUser({
+          id: row.id
+        });
+        ElMessage({
+          showClose: true,
+          message: "删除成功",
+          type: "success",
+        });
+        await getUserData(config)
+      })
+      .catch(() => {
+        // catch error
+      })
 }
 onMounted(() => {
   getUserData(config);
