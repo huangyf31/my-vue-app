@@ -1,5 +1,5 @@
 import {createStore} from 'vuex'
-
+import Cookie from 'js-cookie'
 export default createStore({
     state: {
         isCollapse: true,
@@ -11,7 +11,10 @@ export default createStore({
                 label: '首页',
                 icon: 'home'
             }
-        ]
+        ],
+        menu: [],
+        token: ''
+
     },
     mutations: {
         updateIsCollapse: (state, payload) => {
@@ -40,7 +43,7 @@ export default createStore({
             localStorage.setItem('menu', JSON.stringify(val));
 
         },
-        addMenu(state,router) {
+        addMenu(state, router) {
             if (!localStorage.getItem('menu')) {
                 return
             }
@@ -55,19 +58,30 @@ export default createStore({
                         return item
                     })
                     menuArray.push(...item.children)
-                }else{
+                } else {
                     let url = `../views/${item.url}.vue`
                     item.component = () => import(url)
                     menuArray.push(item)
                 }
             })
-            menuArray.forEach(item=>{
-                router.addRoute('home1',item)
+            menuArray.forEach(item => {
+                router.addRoute('home1', item)
             })
         },
-        cleanMenu(state){
+        cleanMenu(state) {
             state.menu = []
             localStorage.removeItem('menu')
+        },
+        setToken(state, val) {
+            state.token = val;
+            Cookie.set('token',val)
+        },
+        clearToken(state){
+            state.token='';
+            Cookie.remove('token')
+        },
+        getToken(state){
+            state.token = state.token || Cookie.get('token')
         }
     }
 })
