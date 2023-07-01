@@ -15,5 +15,6 @@ for (const [key,component] of Object.entries(ElementPlusIconsVue)) {
 }
 app.use(ElementPlus);
 app.config.globalProperties.$api = api
+store.commit("addMenu",router)
 app.use(router).use(store);
 app.mount('#app');

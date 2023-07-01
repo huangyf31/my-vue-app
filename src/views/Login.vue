@@ -31,6 +31,7 @@ const login = async () => {
   const res = await proxy.$api.getMenu(loginForm);
   console.log(res);
   store.commit("setMenu", res.menu);
+  store.commit("addMenu",router)
   await router.push({
     name: "home",
   })
