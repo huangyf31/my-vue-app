@@ -19,7 +19,7 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item @click="handleLoginOut()">退出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -30,6 +30,7 @@
 <script setup>
 import {useStore} from 'vuex'
 import {computed} from "vue";
+import {useRouter} from "vue-router";
 
 const store = useStore();
 const getImgSrc = (user) => {
@@ -37,6 +38,13 @@ const getImgSrc = (user) => {
 };
 const handleCollapse = () => {
   store.commit('updateIsCollapse');
+};
+const router = useRouter();
+const handleLoginOut = () => {
+  store.commit("cleanMenu");
+  router.push({
+    name: 'login',
+  })
 }
 //计算属性
 const current = computed(() => {
