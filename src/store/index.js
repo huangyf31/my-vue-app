@@ -32,8 +32,13 @@ export default createStore({
             }
         },
         closeTab: (state, val) => {
-            let res = state.tableList.findIndex((item)=>item.name === val.name);
-            state.tableList.splice(res,1);
+            let res = state.tableList.findIndex((item) => item.name === val.name);
+            state.tableList.splice(res, 1);
+        },
+        setMenu(state, val) {
+            state.menu = val;
+            localStorage.setItem('menu',JSON.stringify(val));
+
         }
     }
 })

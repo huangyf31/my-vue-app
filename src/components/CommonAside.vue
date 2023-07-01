@@ -86,13 +86,14 @@ const list = [
     ],
   },
 ]
+const asyncList = store.state.menu;
 
 const noChildren = () => {
-  return list.filter((item) => !item.children);
+  return asyncList.filter((item) => !item.children);
 }
 
 const hasChildren = () => {
-  return list.filter((item) => item.children);
+  return asyncList.filter((item) => item.children);
 }
 
 const clickMenu = (item) => {

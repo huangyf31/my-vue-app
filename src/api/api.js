@@ -58,5 +58,14 @@ export default {
             mock: false,
             data: params,
         })
+    },
+    //权限控制
+    getMenu(params){
+        return request({
+            url: "/permission/getMenu",
+            method: "post",
+            mock: false,
+            data: params,
+        })
     }
 }
